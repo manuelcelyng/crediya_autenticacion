@@ -1,0 +1,43 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "autenticacion"
+  devtools:
+    add-properties: false
+  h2:
+    console:
+      enabled: true
+      path: "/h2"
+  profiles:
+    include: null
+  flyway:
+    enabled: true
+    # Flyway usará su propio DataSource JDBC si se provee esta URL
+    url: "jdbc:mysql://${adapters.r2dbc.host}:${adapters.r2dbc.port}/${adapters.r2dbc.database}"
+    user: "${adapters.r2dbc.username}"
+    password: "${adapters.r2dbc.password}"
+    locations: "classpath:db/migration"
+    connect-retries: 3
+    placeholders:
+      db: "${adapters.r2dbc.database}"
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 3306
+    database: "mydatabase"
+    username: "root"
+    password: "mysql"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+
