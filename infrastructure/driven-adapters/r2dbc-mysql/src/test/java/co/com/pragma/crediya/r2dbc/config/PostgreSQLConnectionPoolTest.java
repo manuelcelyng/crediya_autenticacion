@@ -30,6 +30,6 @@ class MysqlConnectionPoolTest {
 
     @Test
     void getConnectionConfigSuccess() {
-        assertNotNull(connectionPool.getConnectionConfig(properties));
+        assertNotNull(connectionPool.connectionPool(properties));
     }
 }

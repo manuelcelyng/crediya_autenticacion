@@ -6,6 +6,7 @@ dependencies {
 	implementation project(':r2dbc-mysql')
     implementation project(':model')
     implementation project(':usecase')
+    implementation project(':shared')
     implementation 'org.springframework.boot:spring-boot-starter'
     // Liquibase for DB migrations (JDBC-based, independent of R2DBC runtime)
     implementation 'org.liquibase:liquibase-core'

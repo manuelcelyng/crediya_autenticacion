@@ -19,10 +19,11 @@ public class MysqlConnectionPool {
     public static final int MAX_IDLE_TIME = 30;
     public static final int DEFAULT_PORT = 3306;
 
-    @Bean
-    public ConnectionPool connectionPool(MysqlConnectionProperties properties) {
-        // Builder de configuración del driver R2DBC para MySQL
-        MySqlConnectionConfiguration configuration = MySqlConnectionConfiguration.builder()
+    /**
+     * Exposed for testing: builds the MySQL R2DBC connection configuration from properties.
+     */
+    public MySqlConnectionConfiguration getConnectionConfig(MysqlConnectionProperties properties) {
+        return MySqlConnectionConfiguration.builder()
                 .host(properties.host())
                 .port(properties.port() != null ? properties.port() : DEFAULT_PORT)
                 .database(properties.database())
@@ -33,6 +34,12 @@ public class MysqlConnectionPool {
                 // .useServerPrepareStatement()                         // opcional: prepared stmts del lado servidor
                 //.createDatabaseIfNotExist()                          // opcional: crea BD si no existe// Cambia a REQUIRED si usas TLS
                 .build();
+    }
+
+    @Bean
+    public ConnectionPool connectionPool(MysqlConnectionProperties properties) {
+        // Builder de configuración del driver R2DBC para MySQL
+        MySqlConnectionConfiguration configuration = getConnectionConfig(properties);
 
         // ConnectionFactory propio del driver MySQL R2DBC
         ConnectionFactory connectionFactory = MySqlConnectionFactory.from(configuration);

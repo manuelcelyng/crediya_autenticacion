@@ -3,11 +3,10 @@ package co.com.pragma.crediya.r2dbc;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import co.com.pragma.crediya.r2dbc.entities.UserEntity;
-import co.com.pragma.crediya.r2dbc.exception.UserNotFoundException;
 import co.com.pragma.crediya.r2dbc.helper.ReactiveAdapterOperations;
+import co.com.pragma.crediya.r2dbc.mappers.UserEntityMapper;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -16,42 +15,24 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UserEntity,
         Long,
         MyReactiveRepository
-> implements UserRepository
-{
-    public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper) {
-        /**
-         *  Could be use mapper.mapBuilder if your domain model implement builder pattern
-         *  super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
-         *  Or using mapper.map with the class of the object model
-         */
+> implements UserRepository {
+
+    private final UserEntityMapper userEntityMapper;
+
+    public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper, UserEntityMapper userEntityMapper) {
         super(repository, mapper, d -> mapper.map(d, User.class));
+        this.userEntityMapper = userEntityMapper;
     }
 
     @Override
     public Mono<User> saveUser(User user) {
-        return super.save(user);
+        UserEntity toSave = userEntityMapper.toEntity(user);
+        return super.repository.save(toSave)
+                .map(userEntityMapper::toDomain);
     }
 
     @Override
-    public Flux<User> getAllUsers() {
-        return super.findAll();
-    }
-
-    @Override
-    public Mono<User> getUserByIdNumber(Long Number) {
-        return super.findById(Number);
-    }
-
-    @Override
-    public Mono<User> editUser(User user) {
-        return super.findById(user.getIdNumber())
-                .flatMap(existingUser -> super.save(user))
-                .switchIfEmpty(Mono.error(new UserNotFoundException()));
-    }
-
-
-    @Override
-    public Mono<Void> deleteUser(Long idNumber) {
-        return repository.deleteById(idNumber);
+    public Mono<Boolean> existsByCorreoElectronico(String correoElectronico) {
+        return super.repository.existsByCorreoElectronico(correoElectronico);
     }
 }

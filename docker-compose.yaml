@@ -1,0 +1,13 @@
+# ya tengo la bd en otro docker-compose
+# pero se puede añadir aqui de ser necesario
+services:
+  auth:
+    container_name: auth
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+
