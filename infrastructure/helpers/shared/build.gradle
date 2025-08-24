@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':model')
+    implementation project(':usecase')
+    implementation 'org.springframework:spring-context'
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+}
