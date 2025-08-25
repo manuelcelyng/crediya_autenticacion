@@ -2,6 +2,7 @@ dependencies {
     implementation project(':model')
     implementation project(':usecase')
     implementation 'org.springframework:spring-context'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation "org.mapstruct:mapstruct:$mapstructVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
 }
