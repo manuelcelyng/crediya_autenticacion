@@ -23,8 +23,9 @@ import java.time.LocalDate;
 
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
 @WebFluxTest
+@org.springframework.context.annotation.Import(co.com.pragma.crediya.api.errors.GlobalErrorHandlerConfig.class)
 class RouterRestTest {
 
     @Autowired

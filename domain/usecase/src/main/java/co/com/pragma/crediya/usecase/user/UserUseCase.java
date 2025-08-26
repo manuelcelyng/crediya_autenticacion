@@ -18,6 +18,5 @@ public class UserUseCase {
                             ? Mono.error(new UserAlreadyExistsException(user.getCorreoElectronico().email()))
                             : userRepository.saveUser(user)
                 );
-
     }
 }

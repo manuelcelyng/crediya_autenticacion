@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
+@lombok.extern.slf4j.Slf4j
 public class GlobalErrorHandlerConfig {
 
     @Bean
@@ -64,15 +65,18 @@ public class GlobalErrorHandlerConfig {
             HttpStatus status;
             ErrorResponse payload;
 
+            log.error("[ERROR] {} on path={} correlationId={}", ex.getClass().getSimpleName(), request.path(), correlationId, ex);
+
             if (ex instanceof UserAlreadyExistsException uae) {
                 status = HttpStatus.CONFLICT;
-                payload = ErrorResponse.of(
+                payload = new ErrorResponse(
                         uae.getCode(),
-                        uae.getMessage(),
+                        uae.getEmail(),
                         status.value(),
                         request.path(),
-                        null,
-                        correlationId
+                        java.time.Instant.now(),
+                        correlationId,
+                        null
                 );
             } else if (ex instanceof BusinessException be) {
                 status = HttpStatus.BAD_REQUEST;

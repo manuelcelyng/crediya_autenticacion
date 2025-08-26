@@ -1,7 +1,8 @@
 package co.com.pragma.crediya.api.config;
 
-import co.com.pragma.crediya.api.Handler;
+import co.com.pragma.crediya.api.UserHandler;
 import co.com.pragma.crediya.api.RouterRest;
+import co.com.pragma.crediya.api.UserHandler;
 import co.com.pragma.crediya.api.dto.CreateUserDTO;
 import co.com.pragma.crediya.api.dto.ResponseUserDTO;
 import co.com.pragma.crediya.api.mapper.UserDtoMapper;
@@ -25,7 +26,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
 @WebFluxTest
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class ConfigTest {

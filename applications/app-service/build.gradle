@@ -8,6 +8,8 @@ dependencies {
     implementation project(':usecase')
     implementation project(':shared')
     implementation 'org.springframework.boot:spring-boot-starter'
+    // Swagger/OpenAPI UI
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0'
     // Liquibase for DB migrations (JDBC-based, independent of R2DBC runtime)
     implementation 'org.liquibase:liquibase-core'
     runtimeOnly 'com.mysql:mysql-connector-j'

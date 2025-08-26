@@ -18,7 +18,8 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class Handler {
+@lombok.extern.slf4j.Slf4j
+public class UserHandler  {
 
     private final UserUseCase userUseCase;
     private final UserDtoMapper mapper;
@@ -27,19 +28,24 @@ public class Handler {
     public Mono<ServerResponse> listenSaveUser(ServerRequest serverRequest) {
         return serverRequest
                 .bodyToMono(CreateUserDTO.class)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Request body is required")))
+                .doOnSubscribe(sub -> log.info("[CREATE_USER] Request received"))
                 .flatMap(dto -> {
                     Set<ConstraintViolation<CreateUserDTO>> violations = validator.validate(dto);
                     if (!violations.isEmpty()) {
+                        log.warn("[CREATE_USER] Validation failed: {} violation(s)", violations.size());
                         return Mono.error(new ConstraintViolationException(violations));
                     }
                     return Mono.just(dto);
                 })
                 .map(mapper::toModel)
                 .flatMap(userUseCase::saveUser)
+                .doOnSuccess(u -> log.info("[CREATE_USER] User persisted with id={}", u.getIdNumber()))
                 .flatMap(savedUser -> ServerResponse.status(HttpStatus.CREATED)
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(mapper.toResponse(savedUser))
-                );
+                )
+                .doOnError(ex -> log.error("[CREATE_USER] Failure creating user: {}", ex.toString()));
     }
 
 }

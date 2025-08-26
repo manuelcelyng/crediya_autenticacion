@@ -8,6 +8,13 @@ spring:
   devtools:
     add-properties: false
 
+logging:
+  pattern:
+    level: "%5p [${spring.application.name}] [cid:%X{correlationId}]"
+  config: ${LOGGING_CONFIG_FILE:classpath:logback-spring.xml}
+  file:
+    path: ${LOG_PATH:build/logs}
+
 
 management:
   endpoints:
