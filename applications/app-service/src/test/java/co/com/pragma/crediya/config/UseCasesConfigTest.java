@@ -1,10 +1,14 @@
 package co.com.pragma.crediya.config;
 
+import co.com.pragma.crediya.model.user.User;
+import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import reactor.core.publisher.Mono;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UseCasesConfigTest {
@@ -29,6 +33,17 @@ public class UseCasesConfigTest {
     @Configuration
     @Import(UseCasesConfig.class)
     static class TestConfig {
+
+        // Stub repository to satisfy UseCase constructor dependencies discovered by @ComponentScan
+        @Bean
+        public UserRepository userRepository() {
+            return new UserRepository() {
+                @Override
+                public Mono<User> saveUser(User user) { return Mono.just(user); }
+                @Override
+                public Mono<Boolean> existsByCorreoElectronico(String correoElectronico) { return Mono.just(false); }
+            };
+        }
 
         @Bean
         public MyUseCase myUseCase() {

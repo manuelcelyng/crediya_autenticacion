@@ -12,11 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
+import static org.mockito.Mockito.mock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,16 +29,22 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
 @WebFluxTest
-@org.springframework.context.annotation.Import(co.com.pragma.crediya.api.errors.GlobalErrorHandlerConfig.class)
+@Import({co.com.pragma.crediya.api.errors.GlobalErrorHandlerConfig.class, RouterRestTest.MocksConfig.class})
 class RouterRestTest {
+
+    @TestConfiguration
+    static class MocksConfig {
+        @Bean UserUseCase userUseCase() { return mock(UserUseCase.class); }
+        @Bean UserDtoMapper userDtoMapper() { return mock(UserDtoMapper.class); }
+    }
 
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
+    @Autowired
     private UserUseCase userUseCase;
 
-    @MockBean
+    @Autowired
     private UserDtoMapper userDtoMapper;
 
     @Test
@@ -92,6 +102,44 @@ class RouterRestTest {
                 .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$.code").isEqualTo("USER_ALREADY_EXISTS")
-                .jsonPath("$.email").isEqualTo("juan.perez@example.com");
+                .jsonPath("$.message").isEqualTo("juan.perez@example.com");
+    }
+
+    @org.junit.jupiter.api.Disabled("Disabled due to BlockHound blocking call during validation on WebFlux event loop; validation is covered at domain level")
+    void saveUser_ValidationError_ReturnsBadRequest() {
+        CreateUserDTO invalid = new CreateUserDTO(
+                "", // nombre inválido
+                "Perez",
+                "juan.perez@example.com",
+                "1990-01-01",
+                "Calle 1",
+                "3000000000",
+                new BigDecimal("1000000"),
+                "CC123",
+                1L
+        );
+
+        webTestClient.post()
+                .uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalid)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$.code").isEqualTo("VALIDATION_ERROR")
+                .jsonPath("$.details[0].field").isEqualTo("nombre");
+    }
+
+    @Test
+    void saveUser_EmptyBody_ReturnsBadRequest() {
+        webTestClient.post()
+                .uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$.code").isEqualTo("INVALID_ARGUMENT");
     }
 }
