@@ -55,20 +55,25 @@
     </appender>
 
     <!-- Niveles por paquete -->
-    <logger name="org.springframework"  level="INFO"/>
-    <logger name="reactor.netty"        level="INFO"/>
-    <logger name="co.com.pragma.crediya" level="INFO"/>
+    <logger name="org.springframework" level="OFF"/>
+    <logger name="org.springframework.boot" level="OFF"/>
+    <logger name="reactor.netty" level="OFF"/>
+    <logger name="io.netty" level="OFF"/>
+    <logger name="liquibase" level="OFF"/>
+    <logger name="jakarta.persistence" level="OFF"/>
 
-    <!-- Root -->
-    <root level="INFO">
+    <!-- Solo logs de la app -->
+    <logger name="co.com.pragma.crediya" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="ASYNC_FILE"/>
-    </root>
+    </logger>
+
+    <!-- Root apagado -->
+    <root level="OFF"/>
 
     <!-- Perfil dev más verboso -->
     <springProfile name="dev">
         <logger name="co.com.pragma.crediya" level="DEBUG"/>
-        <root level="DEBUG"/>
     </springProfile>
 
 </configuration>

@@ -65,7 +65,7 @@ public class GlobalErrorHandlerConfig {
             HttpStatus status;
             ErrorResponse payload;
 
-            log.error("[ERROR] {} on path={} correlationId={}", ex.getClass().getSimpleName(), request.path(), correlationId, ex);
+            //log.error("[ERROR] {} on path={} correlationId={}", ex.getClass().getSimpleName(), request.path(), correlationId, ex);
 
             if (ex instanceof UserAlreadyExistsException uae) {
                 status = HttpStatus.CONFLICT;
