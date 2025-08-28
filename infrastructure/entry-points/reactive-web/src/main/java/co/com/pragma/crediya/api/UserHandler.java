@@ -31,7 +31,7 @@ public class UserHandler  {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Request body is required")))
                 .doOnSubscribe(sub -> log.info("[CREATE_USER] Request received"))
                 .flatMap(dto -> {
-                    Set<ConstraintViolation<CreateUserDTO>> violations = validator.validate(dto);
+                    Set<ConstraintViolation<CreateUserDTO>> violations =  validator.validate(dto);
                     if (!violations.isEmpty()) {
                         log.warn("[CREATE_USER] Validation failed: {} violation(s)", violations.size());
                         return Mono.error(new ConstraintViolationException(violations));

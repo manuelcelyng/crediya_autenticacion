@@ -1,5 +1,8 @@
 package co.com.pragma.crediya.usecase.user.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class UserAlreadyExistsException extends BusinessException {
 
     private final String email;
@@ -9,5 +12,4 @@ public class UserAlreadyExistsException extends BusinessException {
         this.email = email;
     }
 
-    public String getEmail() { return email; }
 }
