@@ -32,7 +32,7 @@ public record CreateUserDTO(
         String telefono,
 
 
-        @NotNull
+
         BigDecimal salarioBase,
 
         @NotBlank

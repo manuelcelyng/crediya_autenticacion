@@ -33,8 +33,8 @@ public interface UserDtoMapper {
                 LocalDate.parse(dto.fechaNacimiento()),
                 dto.direccion(),
                 dto.telefono(),
-                dto.correoElectronico() == null ? null : new Email(dto.correoElectronico()),
-                dto.salarioBase() == null ? null : new Salary(dto.salarioBase()),
+                dto.correoElectronico() == null ? new Email(null) : new Email(dto.correoElectronico()),
+                dto.salarioBase() == null ? new Salary(null) : new Salary(dto.salarioBase()),
                 dto.documentoIdentidad(),
                 dto.rolId() == null ? null : BigDecimal.valueOf(dto.rolId())
         );
