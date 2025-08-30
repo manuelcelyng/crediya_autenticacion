@@ -1,8 +1,9 @@
 package co.com.pragma.crediya.api.errors;
 
+import co.com.pragma.crediya.usecase.login.exceptions.InvalidCredentials;
 import co.com.pragma.crediya.shared.errors.ErrorDetail;
 import co.com.pragma.crediya.shared.errors.ErrorResponse;
-import co.com.pragma.crediya.usecase.user.exceptions.BusinessException;
+import co.com.pragma.crediya.usecase.BusinessException;
 import co.com.pragma.crediya.usecase.user.exceptions.UserAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -78,6 +79,19 @@ public class GlobalErrorHandlerConfig {
                         correlationId,
                         null
                 );
+            } else if(ex instanceof InvalidCredentials ic) {
+                status = HttpStatus.UNAUTHORIZED;
+                payload = new ErrorResponse(
+                        ic.getCode(),
+                        ic.getMessage(),
+                        status.value(),
+                        request.path(),
+                        java.time.Instant.now(),
+                        correlationId,
+                        null
+                );
+
+
             } else if (ex instanceof BusinessException be) {
                 status = HttpStatus.BAD_REQUEST;
                 payload = ErrorResponse.of(

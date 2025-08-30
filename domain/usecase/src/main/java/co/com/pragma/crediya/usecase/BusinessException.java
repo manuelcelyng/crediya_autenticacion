@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.usecase.user.exceptions;
+package co.com.pragma.crediya.usecase;
 
 import lombok.Getter;
 

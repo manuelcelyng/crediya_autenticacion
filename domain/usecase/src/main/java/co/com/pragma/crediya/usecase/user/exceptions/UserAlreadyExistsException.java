@@ -1,5 +1,6 @@
 package co.com.pragma.crediya.usecase.user.exceptions;
 
+import co.com.pragma.crediya.usecase.BusinessException;
 import lombok.Getter;
 
 @Getter

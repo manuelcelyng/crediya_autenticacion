@@ -5,13 +5,16 @@ import co.com.pragma.crediya.model.user.Salary;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.r2dbc.entities.UserEntity;
 import org.mapstruct.Mapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
 
-    default UserEntity toEntity(User domain) {
+
+
+    default UserEntity toEntity(User domain, PasswordEncoder passwordEncoder) {
         if (domain == null) return null;
         return UserEntity.builder()
                 .idUsuario(domain.getIdNumber())
@@ -24,6 +27,7 @@ public interface UserEntityMapper {
                 .salarioBase(domain.getSalarioBase() == null ? null : domain.getSalarioBase().cantidad())
                 .documentoIdentidad(domain.getDocumentoIdentidad())
                 .rolId(domain.getRolId() == null ? null : domain.getRolId().longValue())
+                .password(passwordEncoder.encode(domain.getPassword()))
                 .build();
     }
 
@@ -38,7 +42,8 @@ public interface UserEntityMapper {
                 entity.getCorreoElectronico() == null ? null : new Email(entity.getCorreoElectronico()),
                 entity.getSalarioBase() == null ? null : new Salary(entity.getSalarioBase()),
                 entity.getDocumentoIdentidad(),
-                entity.getRolId() == null ? null : BigDecimal.valueOf(entity.getRolId())
+                entity.getRolId() == null ? null : entity.getRolId(),
+                entity.getPassword()
         );
         return entity.getIdUsuario() == null ? created : created.withId(entity.getIdUsuario());
     }

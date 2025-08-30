@@ -5,15 +5,34 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:local}
   application:
     name: "autenticacion"
-  devtools:
+  devtobols:
     add-properties: false
+
+  security:
+    user:
+      name: user
+
+
+security:
+  jwt:
+    # CADENA ALEATORIA DE >= 32 BYTES :D, mejor por variable de entorno
+    secret: ${JWT_KEY_SECRET:fQZJCefphgnEAnD9WlLBIQbpzV351d0mb3oGGsT6bvtaSqIZbTSId6wDwV3B1CbxEO7JlxQK6obNR9oUjDlYGg==}
+    ttl-minutes: 60
+
+app:
+  issuer: "http://localhost:8080"
+  audience: "autenticacion"
+
+
 
 logging:
   pattern:
     level: "%5p [${spring.application.name}] [cid:%X{correlationId}]"
-  config: ${LOGGING_CONFIG_FILE:classpath:logback-spring.xml}
+ # config: ${LOGGING_CONFIG_FILE:classpath:logback-spring.xml}
   file:
     path: ${LOG_PATH:build/logs}
+
+
 
 
 management:

@@ -39,6 +39,11 @@ public record CreateUserDTO(
         String documentoIdentidad,
 
         @NotNull
-        Long rolId
+        Long rolId,
+
+
+        @NotBlank
+        //TODO: Agregar patron para recibir una contraseña valida :D
+        String password
 ) {
 }

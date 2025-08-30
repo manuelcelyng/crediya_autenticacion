@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: add password column to usuarios
+      author: manuel
+      changes:
+        - addColumn:
+            tableName: usuarios
+            columns:
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true

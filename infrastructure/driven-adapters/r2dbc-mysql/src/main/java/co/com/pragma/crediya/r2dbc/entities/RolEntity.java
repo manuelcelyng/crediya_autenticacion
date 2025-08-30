@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
-public class RoleEntity {
+public class RolEntity {
     @Id
     @Column("rol_id")
     private Long idRol;

@@ -6,6 +6,7 @@ import co.com.pragma.crediya.r2dbc.entities.UserEntity;
 import co.com.pragma.crediya.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.pragma.crediya.r2dbc.mappers.UserEntityMapper;
 import org.reactivecommons.utils.ObjectMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -18,15 +19,19 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 > implements UserRepository {
 
     private final UserEntityMapper userEntityMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper, UserEntityMapper userEntityMapper) {
+    public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper, UserEntityMapper userEntityMapper, PasswordEncoder passwordEncoder) {
         super(repository, mapper, d -> mapper.map(d, User.class));
         this.userEntityMapper = userEntityMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Mono<User> saveUser(User user) {
-        UserEntity toSave = userEntityMapper.toEntity(user);
+
+        UserEntity toSave = userEntityMapper.toEntity(user, passwordEncoder);
+
         return super.repository.save(toSave)
                 .map(userEntityMapper::toDomain);
     }
@@ -34,5 +39,11 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     @Override
     public Mono<Boolean> existsByCorreoElectronico(String correoElectronico) {
         return super.repository.existsByCorreoElectronico(correoElectronico);
+    }
+
+    @Override
+    public Mono<User> findByCorreoElectronico(String correoElectronico) {
+        return super.repository.findByCorreoElectronico(correoElectronico)
+                .map(userEntityMapper::toDomain);
     }
 }
