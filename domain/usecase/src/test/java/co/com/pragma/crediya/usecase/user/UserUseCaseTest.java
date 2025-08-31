@@ -4,7 +4,7 @@ import co.com.pragma.crediya.model.user.Email;
 import co.com.pragma.crediya.model.user.Salary;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
-import co.com.pragma.crediya.usecase.user.exceptions.UserAlreadyExistsException;
+import co.com.pragma.crediya.usecase.exceptions.UserAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

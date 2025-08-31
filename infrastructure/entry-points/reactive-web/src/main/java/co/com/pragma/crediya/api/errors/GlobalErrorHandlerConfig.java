@@ -1,10 +1,11 @@
 package co.com.pragma.crediya.api.errors;
 
-import co.com.pragma.crediya.usecase.login.exceptions.InvalidCredentials;
+import co.com.pragma.crediya.usecase.exceptions.RolNotFoundException;
+import co.com.pragma.crediya.usecase.exceptions.InvalidCredentials;
 import co.com.pragma.crediya.shared.errors.ErrorDetail;
 import co.com.pragma.crediya.shared.errors.ErrorResponse;
-import co.com.pragma.crediya.usecase.BusinessException;
-import co.com.pragma.crediya.usecase.user.exceptions.UserAlreadyExistsException;
+import co.com.pragma.crediya.usecase.exceptions.BusinessException;
+import co.com.pragma.crediya.usecase.exceptions.UserAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -68,7 +69,20 @@ public class GlobalErrorHandlerConfig {
 
             //log.error("[ERROR] {} on path={} correlationId={}", ex.getClass().getSimpleName(), request.path(), correlationId, ex);
 
-            if (ex instanceof UserAlreadyExistsException uae) {
+            if( ex instanceof RolNotFoundException rne){
+                status = HttpStatus.NOT_FOUND;
+                payload = new ErrorResponse(
+                        rne.getCode(),
+                        rne.getMessage(),
+                        status.value(),
+                        request.path(),
+                        java.time.Instant.now(),
+                        correlationId,
+                        null
+                );
+            }
+
+            else if (ex instanceof UserAlreadyExistsException uae) {
                 status = HttpStatus.CONFLICT;
                 payload = new ErrorResponse(
                         uae.getCode(),

@@ -7,10 +7,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -31,10 +35,13 @@ public class LoginHandler {
     }
 
 
-    public Mono<ServerResponse> listenRefreshToken(ServerRequest serverRequest) {
-        // Recibe un toke refresh que se envia al useCare
-        // Devuelve un TokenResponse nuevo :D refreshhh
-        return null;
+    public Mono<ServerResponse> listenPing(ServerRequest serverRequest) {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(ctx -> (Authentication) ctx.getAuthentication())
+                .flatMap(auth -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue( Map.of("userId", auth.getName(), "authorities", auth.getAuthorities().toString()))
+                );
     }
 
 }

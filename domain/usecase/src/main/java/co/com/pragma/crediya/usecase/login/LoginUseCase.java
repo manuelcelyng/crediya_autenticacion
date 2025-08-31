@@ -10,8 +10,8 @@ public class LoginUseCase {
 
     private final LoginService loginService;
 
-    public Mono<AuthTokens> login(String email, String rawPassword){
-        return loginService.login(email, rawPassword);
+    public Mono<AuthTokens> login(String email, String password){
+        return loginService.login(email, password);
     }
 
 }

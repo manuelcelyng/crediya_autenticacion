@@ -1,6 +1,8 @@
 package co.com.pragma.crediya.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -48,7 +50,7 @@ public class JwtService {
                 .claim("email", email)
                 .claim("roles", roles)
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plus(Duration.ofMinutes(ttlMinutes))))
+                .expiration(Date.from(expiresAt()))
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
@@ -60,5 +62,22 @@ public class JwtService {
     public Long getttlMinutes(){
         return ttlMinutes;
     }
+
+
+    public Jws<Claims> parseAndValidate(String token){
+
+        return Jwts.parser()
+                .verifyWith(key)
+                .clockSkewSeconds(Duration.ofSeconds(120).getSeconds())
+                .requireIssuer(issuer)
+                //.requireAudience(audience) // <- TODO: Lo habilitare luego :D
+                .build()
+                .parseSignedClaims(token);
+
+    }
+
+
+
+
 }
 

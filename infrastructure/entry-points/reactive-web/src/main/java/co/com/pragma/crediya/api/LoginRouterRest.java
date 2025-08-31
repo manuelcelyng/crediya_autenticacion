@@ -15,7 +15,8 @@ public class LoginRouterRest {
 
     @Bean
     public RouterFunction<ServerResponse> routerFunctionLogin(LoginHandler handler) {
-        return route(POST("/api/v1/login"), handler::listenLogin);
+        return route(POST("/api/v1/login"), handler::listenLogin)
+                .andRoute(GET("/api/v1/ping"), handler::listenPing);
     }
 
 }
