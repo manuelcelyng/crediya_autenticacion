@@ -44,7 +44,7 @@ public class LoginServiceImpl implements LoginService {
                     var user = tuple.getT1(); // Cojo el usuario
                     var rol = tuple.getT2();  // Cojo el rol
                     String token = jwt.generate(
-                            String.valueOf(user.getIdNumber()),
+                            String.valueOf(user.getDocumentoIdentidad()),
                             user.getCorreoElectronico().email(),
                             Set.of(rol.getNombre())  // En el token guardamos Set of Roles :D, pero la APP solo soporta un rol por usuario
                     );
