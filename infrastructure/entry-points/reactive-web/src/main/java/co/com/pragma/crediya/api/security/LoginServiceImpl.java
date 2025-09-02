@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.security;
+package co.com.pragma.crediya.api.security;
 
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.gateways.RolRepository;

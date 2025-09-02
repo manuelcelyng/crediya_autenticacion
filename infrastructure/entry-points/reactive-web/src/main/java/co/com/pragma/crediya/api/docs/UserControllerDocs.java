@@ -3,6 +3,7 @@ package co.com.pragma.crediya.api.docs;
 import co.com.pragma.crediya.api.UserHandler;
 import co.com.pragma.crediya.api.dto.CreateUserDTO;
 import co.com.pragma.crediya.api.dto.ResponseUserDTO;
+import co.com.pragma.crediya.api.dto.userexists.UserExistsResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +35,23 @@ public interface UserControllerDocs {
                                             content = @Content(schema = @Schema(implementation = ResponseUserDTO.class))),
                                     @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
                                     @ApiResponse(responseCode = "409", description = "Usuario ya existe")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuarios/valid",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "listenUserExists",
+                    operation = @Operation(
+                            operationId = "UserValidByEmailAndId",
+                            summary = "Verificar existencia de usuario por email y su documento de identidad",
+                            description = "Retorna si existe un usuario y si es valido",
+                            responses = {
+                                    @ApiResponse(responseCode = "200", description = "Valido o no Valido",
+                                            content = @Content(schema = @Schema(implementation = UserExistsResponseDTO.class))),
+                                    @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
                             }
                     )
             )

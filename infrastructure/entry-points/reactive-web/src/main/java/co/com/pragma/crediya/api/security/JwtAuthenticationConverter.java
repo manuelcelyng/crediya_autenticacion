@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.security;
+package co.com.pragma.crediya.api.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

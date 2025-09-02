@@ -1,6 +1,6 @@
 package co.com.pragma.crediya.api;
 
-import co.com.pragma.crediya.api.docs.UserControllerDocs;
+import co.com.pragma.crediya.api.docs.LoginControllerDocs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -11,7 +11,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
-public class LoginRouterRest {
+public class LoginRouterRest implements LoginControllerDocs {
 
     @Bean
     public RouterFunction<ServerResponse> routerFunctionLogin(LoginHandler handler) {

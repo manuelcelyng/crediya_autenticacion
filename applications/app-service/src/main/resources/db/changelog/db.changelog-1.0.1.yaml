@@ -11,3 +11,46 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: true
+
+
+
+  - changeSet:
+      id: seed initial roles
+      author: manuel
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: rol_id
+                  valueNumeric: 1
+              - column:
+                  name: nombre
+                  value: ADMIN
+              - column:
+                  name: descripcion
+                  value: Rol administrador
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: rol_id
+                  valueNumeric: 2
+              - column:
+                  name: nombre
+                  value: ASESOR
+              - column:
+                  name: descripcion
+                  value: Rol asesor
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: rol_id
+                  valueNumeric: 3
+              - column:
+                  name: nombre
+                  value: CLIENTE
+              - column:
+                  name: descripcion
+                  value: Rol cliente

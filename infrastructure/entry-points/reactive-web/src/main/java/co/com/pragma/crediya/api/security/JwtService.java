@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.security;
+package co.com.pragma.crediya.api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -45,7 +45,7 @@ public class JwtService {
         return Jwts.builder()
                 .issuer(issuer)
                 .audience().add(audience).and()
-                .subject(userId)               // usa el ID estable como "sub"
+                .subject(userId)         // usa el ID estable como "sub"
                 .claim("uid", userId)
                 .claim("email", email)
                 .claim("roles", roles)

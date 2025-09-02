@@ -25,5 +25,8 @@ adapters:
     password: "mysql"
 
 
+app:
+  publicPaths: /h2/**,/api/v1/login,/v3/api-docs/**,/v3/api-docs/swagger-config,/swagger-ui.html,/swagger-ui/**,/webjars/**
+
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"

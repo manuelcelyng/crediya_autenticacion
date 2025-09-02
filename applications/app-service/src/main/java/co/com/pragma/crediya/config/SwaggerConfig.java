@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Configuration;
         servers = {
                 @Server(description = "devServer", url = "http://localhost:8080"),
                 @Server(description = "testServer", url = "http://localhost:8080"),
-        }) // quitar este parentesis :D
-        //security = @SecurityRequirement(name = "bearerAuth"))
-//@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, description = "JWT Bearer autenticación", bearerFormat = "JWT")
+        }, // quitar este parentesis :D
+        security = @SecurityRequirement(name = "bearerAuth"))
+@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, description = "JWT Bearer autenticación", bearerFormat = "JWT")
 public class SwaggerConfig {
 }

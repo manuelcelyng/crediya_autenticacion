@@ -9,7 +9,15 @@ dependencies {
     // Swagger/OpenAPI for WebFlux (compile-time for annotations in this module)
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0'
     implementation "org.mapstruct:mapstruct:$mapstructVersion"
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
+
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //JSON WEB TOKEN , librerias  :D , prueba 1
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
+    testImplementation 'org.springframework.security:spring-security-test'
 }

@@ -25,4 +25,9 @@ public class UserUseCase {
                 )))
                 .then(userRepository.saveUser(user));
     }
+
+    public Mono<User> existsByCorreo(String email) {
+        return userRepository.findByCorreoElectronico(email)
+                .switchIfEmpty(Mono.empty());
+    }
 }

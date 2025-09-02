@@ -1,6 +1,8 @@
 package co.com.pragma.crediya.api;
 
 import co.com.pragma.crediya.api.dto.CreateUserDTO;
+import co.com.pragma.crediya.api.dto.userexists.RequestUserExistsDTO;
+import co.com.pragma.crediya.api.dto.userexists.UserExistsResponseDTO;
 import co.com.pragma.crediya.api.mapper.UserDtoMapper;
 import co.com.pragma.crediya.usecase.user.UserUseCase;
 import jakarta.validation.ConstraintViolation;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -46,6 +50,51 @@ public class UserHandler  {
                         .bodyValue(mapper.toResponse(savedUser))
                 )
                 .doOnError(ex -> log.error("[CREATE_USER] Failure creating user: {}", ex.toString()));
+    }
+
+    // Inter-service: validate if a user exists by email
+    public Mono<ServerResponse> listenUserValid(ServerRequest serverRequest){
+
+        return serverRequest
+                .bodyToMono(RequestUserExistsDTO.class)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Request body is required")))
+                .doOnSubscribe(sub -> log.info("[EXISTS USER] Request received"))
+                .flatMap(dto -> {
+                    Set<ConstraintViolation<RequestUserExistsDTO>> violations =  validator.validate(dto);
+                    if (!violations.isEmpty()) {
+                        log.warn("[EXISTS USER] Validation failed: {} violation(s)", violations.size());
+                        return Mono.error(new ConstraintViolationException(violations));
+                    }
+
+                    return userUseCase.existsByCorreo(dto.email())
+                            // Caso: usuario encontrado
+                            .flatMap(user -> {
+                                log.info("[EXISTS USER] User found by email={}", dto.email());
+                                boolean userValid =
+                                        user.getDocumentoIdentidad().equals(dto.documentoIdentidad()) &&
+                                                user.getCorreoElectronico().email().equals(dto.email());
+
+                                return ServerResponse.ok()
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(new UserExistsResponseDTO(userValid));
+                            })
+                            // Caso: no existe -> responde explícitamente
+                            .switchIfEmpty(
+                                    ServerResponse.ok()
+                                            .contentType(MediaType.APPLICATION_JSON)
+                                            .bodyValue(new UserExistsResponseDTO(false))
+                            );
+
+
+
+
+                })
+                .doOnError(ex -> log.error("[EXISTS USER] Failure looking user: {}", ex.toString()));
+
+
+
+
+
     }
 
 }
