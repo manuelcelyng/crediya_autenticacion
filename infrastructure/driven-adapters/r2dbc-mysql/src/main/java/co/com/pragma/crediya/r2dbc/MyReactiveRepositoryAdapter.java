@@ -2,13 +2,17 @@ package co.com.pragma.crediya.r2dbc;
 
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
+import co.com.pragma.crediya.model.user.solicitudes.UserLiteView;
 import co.com.pragma.crediya.r2dbc.entities.UserEntity;
 import co.com.pragma.crediya.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.pragma.crediya.r2dbc.mappers.UserEntityMapper;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Repository
 public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
@@ -46,4 +50,11 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return super.repository.findByCorreoElectronico(correoElectronico)
                 .map(userEntityMapper::toDomain);
     }
+
+    @Override
+    public Flux<UserLiteView> findLiteByCorreoElectronicoIn(List<String> correosElectronicos) {
+        return super.repository.findLiteByCorreoElectronicoIn(correosElectronicos);
+    }
+
+
 }

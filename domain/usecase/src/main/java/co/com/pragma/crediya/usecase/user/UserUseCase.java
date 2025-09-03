@@ -3,11 +3,15 @@ package co.com.pragma.crediya.usecase.user;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.gateways.RolRepository;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
+import co.com.pragma.crediya.model.user.solicitudes.UserLiteView;
 import co.com.pragma.crediya.usecase.exceptions.RolNotFoundException;
 import co.com.pragma.crediya.usecase.exceptions.TypeErrors;
 import co.com.pragma.crediya.usecase.exceptions.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class UserUseCase {
@@ -30,4 +34,10 @@ public class UserUseCase {
         return userRepository.findByCorreoElectronico(email)
                 .switchIfEmpty(Mono.empty());
     }
+
+    public Flux<UserLiteView> findLiteByCorreoElectronicoIn(List<String> correosElectronicos) {
+        return userRepository.findLiteByCorreoElectronicoIn(correosElectronicos);
+    }
+
+
 }

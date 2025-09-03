@@ -3,6 +3,9 @@ package co.com.pragma.crediya.api;
 import co.com.pragma.crediya.api.dto.CreateUserDTO;
 import co.com.pragma.crediya.api.dto.userexists.RequestUserExistsDTO;
 import co.com.pragma.crediya.api.dto.userexists.UserExistsResponseDTO;
+import co.com.pragma.crediya.api.dto.usersolicitud.RequestUserBatch;
+import co.com.pragma.crediya.api.dto.usersolicitud.ResponseUsersBatch;
+import co.com.pragma.crediya.api.dto.usersolicitud.UserLiteDTO;
 import co.com.pragma.crediya.api.mapper.UserDtoMapper;
 import co.com.pragma.crediya.usecase.user.UserUseCase;
 import jakarta.validation.ConstraintViolation;
@@ -90,10 +93,25 @@ public class UserHandler  {
 
                 })
                 .doOnError(ex -> log.error("[EXISTS USER] Failure looking user: {}", ex.toString()));
+    }
 
 
 
+    public Mono<ServerResponse> listenUserSolicitudes(ServerRequest serverRequest) {
 
+        return serverRequest.bodyToMono(RequestUserBatch.class)
+                .doOnNext(r -> log.info("[USER_BATCH] Processing request with emails={}", r.emails()))
+                .flatMapMany(r -> userUseCase.findLiteByCorreoElectronicoIn(r.emails()))
+                .doOnNext(view -> log.info("[USER_BATCH] Found user: nombre={}, salario={}, email={}",
+                        view.getNombre(), view.getSalarioBase(), view.getCorreoElectronico()))
+                .map(view -> new UserLiteDTO(view.getNombre(), view.getSalarioBase(), view.getCorreoElectronico()))
+                .doOnNext(dto -> log.info("[USER_BATCH] Mapped to DTO: {}", dto))
+                .collectList()
+                .doOnNext(users -> log.info("[USER_BATCH] Collected {} users", users.size()))
+                .flatMap(users -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(new ResponseUsersBatch(users))
+                );
 
     }
 
