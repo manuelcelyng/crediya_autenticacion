@@ -26,7 +26,7 @@ class UserDtoMapperTest {
     void toModel_shouldMapAllFields() {
         CreateUserDTO dto = new CreateUserDTO(
                 "Juan","Perez","juan.perez@example.com","1990-01-01",
-                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 2L
+                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 2L, "Pwd12345!"
         );
 
         User user = mapper.toModel(dto);
@@ -40,7 +40,7 @@ class UserDtoMapperTest {
         assertEquals("juan.perez@example.com", user.getCorreoElectronico().email());
         assertEquals(new BigDecimal("1000000"), user.getSalarioBase().cantidad());
         assertEquals("CC123", user.getDocumentoIdentidad());
-        assertEquals(new BigDecimal("2"), user.getRolId());
+        assertEquals(2L, user.getRolId());
     }
 
 }

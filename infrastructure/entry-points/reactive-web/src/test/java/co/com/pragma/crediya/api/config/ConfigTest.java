@@ -1,7 +1,7 @@
 package co.com.pragma.crediya.api.config;
 
 import co.com.pragma.crediya.api.UserHandler;
-import co.com.pragma.crediya.api.RouterRest;
+import co.com.pragma.crediya.api.UserRouterRest;
 import co.com.pragma.crediya.api.UserHandler;
 import co.com.pragma.crediya.api.dto.CreateUserDTO;
 import co.com.pragma.crediya.api.dto.ResponseUserDTO;
@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
+@ContextConfiguration(classes = {UserRouterRest.class, UserHandler.class})
 @WebFluxTest
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class ConfigTest {
@@ -45,12 +45,12 @@ class ConfigTest {
         // Arrange
         CreateUserDTO request = new CreateUserDTO(
                 "Juan","Perez","juan.perez@example.com","1990-01-01",
-                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 1L
+                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 1L, "Secreta123!"
         );
         User domain = User.create(
                 "Juan","Perez", LocalDate.parse("1990-01-01"),
                 "Calle 1","3000000000", new Email("juan.perez@example.com"), new Salary(new BigDecimal("1000000")),
-                "CC123", BigDecimal.valueOf(1)
+                "CC123", 1L, "Secreta123!"
         );
         User saved = domain.withId(10L);
         ResponseUserDTO response = new ResponseUserDTO(10L, "Juan","Perez","1990-01-01","Calle 1","3000000000","juan.perez@example.com", new BigDecimal("1000000"), "CC123", BigDecimal.valueOf(1));

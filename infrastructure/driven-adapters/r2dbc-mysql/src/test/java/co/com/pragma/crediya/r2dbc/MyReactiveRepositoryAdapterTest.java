@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.Example;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,6 +39,9 @@ class MyReactiveRepositoryAdapterTest {
     @Mock
     UserEntityMapper userEntityMapper;
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     private User buildUserWithId(Long id, String nombre, String apellido) {
         return User.create(
                 nombre,
@@ -48,7 +52,8 @@ class MyReactiveRepositoryAdapterTest {
                 new Email("test@pragma.com.co"),
                 new Salary(new BigDecimal("2000000")),
                 "DOC123",
-                new BigDecimal("400000")
+                400000L,
+                "secret"
         ).withId(id);
     }
 
@@ -62,7 +67,8 @@ class MyReactiveRepositoryAdapterTest {
                 new Email("test@pragma.com.co"),
                 new Salary(new BigDecimal("2000000")),
                 "DOC123",
-                new BigDecimal("400000")
+                400000L,
+                "secret"
         );
     }
 
@@ -75,7 +81,7 @@ class MyReactiveRepositoryAdapterTest {
         User expectedUser = buildUserWithId(1L, "John", "Doe"); // Usuario de dominio final (con ID)
 
         // Simula el comportamiento del UserEntityMapper, que es lo que usa el método real
-        when(userEntityMapper.toEntity(userToSave)).thenReturn(entityToSave);
+        when(userEntityMapper.toEntity(userToSave, passwordEncoder)).thenReturn(entityToSave);
         when(repository.save(entityToSave)).thenReturn(Mono.just(savedEntity));
         when(userEntityMapper.toDomain(savedEntity)).thenReturn(expectedUser);
 

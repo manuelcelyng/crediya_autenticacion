@@ -27,7 +27,7 @@ public class UserUseCase {
                                 : rolRepository.findById(user.getRolId()) )
                 .switchIfEmpty(Mono.error(new RolNotFoundException(TypeErrors.ROL_NOT_FOUND,  String.format("El rol con id %d no existe", user.getRolId())
                 )))
-                .then(userRepository.saveUser(user));
+                .then(Mono.defer(() -> userRepository.saveUser(user)));
     }
 
     public Mono<User> existsByCorreo(String email) {

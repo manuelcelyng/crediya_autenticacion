@@ -33,16 +33,16 @@ public interface UserDtoMapper {
                 LocalDate.parse(dto.fechaNacimiento()),
                 dto.direccion(),
                 dto.telefono(),
-                dto.correoElectronico() == null ? new Email(null) : new Email(dto.correoElectronico()),
-                dto.salarioBase() == null ? new Salary(null) : new Salary(dto.salarioBase()),
+                dto.correoElectronico() == null ? null : new Email(dto.correoElectronico()),
+                dto.salarioBase() == null ? null : new Salary(dto.salarioBase()),
                 dto.documentoIdentidad(),
-                dto.rolId() == null ? null : dto.rolId(),
+                dto.rolId(),
                 dto.password()
         );
     }
 
     @Mappings({
-            @Mapping(target = "rolId", source = "rolId"),
+            @Mapping(target = "rolId", expression = "java(user.getRolId() == null ? null : java.math.BigDecimal.valueOf(user.getRolId()))"),
             @Mapping(target = "fechaNacimiento", source = "fechaNacimiento", qualifiedByName = "fromLocalDate"),
             @Mapping(target = "correoElectronico", source = "correoElectronico", qualifiedByName = "fromEmail"),
             @Mapping(target = "salarioBase", source = "salarioBase", qualifiedByName = "fromSalary")

@@ -32,8 +32,9 @@ import java.util.Set;
 
 
 import static org.mockito.Mockito.when;
+import co.com.pragma.crediya.usecase.exceptions.TypeErrors;
 
-@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
+@ContextConfiguration(classes = {UserRouterRest.class, UserHandler.class})
 @WebFluxTest
 @Import({GlobalErrorHandlerConfig.class, RouterRestTest.MocksConfig.class})
 class RouterRestTest {
@@ -62,12 +63,13 @@ class RouterRestTest {
     void saveUser_Created() {
         CreateUserDTO request = new CreateUserDTO(
                 "Juan","Perez","juan.perez@example.com","1990-01-01",
-                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 1L
+                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 1L,
+                "Secreta123!"
         );
         User domain = User.create(
                 "Juan","Perez", LocalDate.parse("1990-01-01"),
                 "Calle 1","3000000000", new Email("juan.perez@example.com"), new Salary(new BigDecimal("1000000")),
-                "CC123", BigDecimal.valueOf(1)
+                "CC123", 1L, "Secreta123!"
         );
         User saved = domain.withId(10L);
         ResponseUserDTO response = new ResponseUserDTO(10L, "Juan","Perez","1990-01-01","Calle 1","3000000000","juan.perez@example.com", new BigDecimal("1000000"), "CC123", BigDecimal.valueOf(1));
@@ -93,16 +95,16 @@ class RouterRestTest {
     void saveUser_AlreadyExists_ReturnsConflict() {
         CreateUserDTO request = new CreateUserDTO(
                 "Juan","Perez","juan.perez@example.com","1990-01-01",
-                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 1L
+                "Calle 1","3000000000", new BigDecimal("1000000"), "CC123", 1L, "Secreta123!"
         );
         User domain = User.create(
                 "Juan","Perez", LocalDate.parse("1990-01-01"),
                 "Calle 1","3000000000", new Email("juan.perez@example.com"), new Salary(new BigDecimal("1000000")),
-                "CC123", BigDecimal.valueOf(1)
+                "CC123", 1L, "Secreta123!"
         );
 
         when(userDtoMapper.toModel(any(CreateUserDTO.class))).thenReturn(domain);
-        when(userUseCase.saveUser(domain)).thenReturn(Mono.error(new UserAlreadyExistsException("juan.perez@example.com")));
+        when(userUseCase.saveUser(domain)).thenReturn(Mono.error(new UserAlreadyExistsException(TypeErrors.USER_ALREADY_EXISTS, "juan.perez@example.com")));
 
         webTestClient.post()
                 .uri("/api/v1/usuarios")
@@ -128,7 +130,8 @@ class RouterRestTest {
                 "3000000000",
                 new BigDecimal("1000000"),
                 "CC123",
-                1L
+                1L,
+                "Secreta123!"
         );
 
         // Mockear constraintViolation

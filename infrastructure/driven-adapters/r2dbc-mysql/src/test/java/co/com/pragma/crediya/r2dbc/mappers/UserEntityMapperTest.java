@@ -20,10 +20,15 @@ class UserEntityMapperTest {
         User domain = User.create(
                 "Mario", "Lopez", LocalDate.of(2000, 2, 2),
                 "Av 10", "3000000001", new Email("mario@example.com"), new Salary(new BigDecimal("123456")),
-                "DOC-1", new BigDecimal("5")
+                "DOC-1", 5L, "plainPass"
         ).withId(77L);
 
-        UserEntity e = mapper.toEntity(domain);
+        org.springframework.security.crypto.password.PasswordEncoder pe = new org.springframework.security.crypto.password.PasswordEncoder() {
+            @Override public String encode(CharSequence rawPassword) { return "ENC(" + rawPassword + ")"; }
+            @Override public boolean matches(CharSequence rawPassword, String encodedPassword) { return encodedPassword.equals(encode(rawPassword)); }
+        };
+
+        UserEntity e = mapper.toEntity(domain, pe);
         assertNotNull(e);
         assertEquals(77L, e.getIdUsuario());
         assertEquals("Mario", e.getNombre());
@@ -50,6 +55,7 @@ class UserEntityMapperTest {
                 .salarioBase(new BigDecimal("999999"))
                 .documentoIdentidad("CC-XYZ")
                 .rolId(7L)
+                .password("ENC(secret)")
                 .build();
 
         User u = mapper.toDomain(entity);
@@ -63,7 +69,7 @@ class UserEntityMapperTest {
         assertEquals("laura@example.com", u.getCorreoElectronico().email());
         assertEquals(new BigDecimal("999999"), u.getSalarioBase().cantidad());
         assertEquals("CC-XYZ", u.getDocumentoIdentidad());
-        assertEquals(new BigDecimal("7"), u.getRolId());
+        assertEquals(7L, u.getRolId());
     }
 
     @Test

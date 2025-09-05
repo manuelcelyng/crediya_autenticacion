@@ -32,7 +32,7 @@ class UserDtoMapperSpringTest {
         User domain = User.create(
                 "Ana","Gomez", LocalDate.parse("1985-05-20"),
                 "Cra 7 # 1-2","3110000000", new Email("ana.gomez@example.com"), new Salary(new BigDecimal("2500000")),
-                "CC999", new BigDecimal("3")
+                "CC999", 3L, "pwd"
         ).withId(10L);
 
         ResponseUserDTO response = mapper.toResponse(domain);

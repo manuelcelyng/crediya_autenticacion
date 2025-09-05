@@ -42,6 +42,10 @@ public class UseCasesConfigTest {
                 public Mono<User> saveUser(User user) { return Mono.just(user); }
                 @Override
                 public Mono<Boolean> existsByCorreoElectronico(String correoElectronico) { return Mono.just(false); }
+                @Override
+                public Mono<User> findByCorreoElectronico(String correoElectronico) { return Mono.empty(); }
+                @Override
+                public reactor.core.publisher.Flux<co.com.pragma.crediya.model.user.solicitudes.UserLiteView> findLiteByCorreoElectronicoIn(java.util.List<String> correosElectronicos) { return reactor.core.publisher.Flux.empty(); }
             };
         }
 
