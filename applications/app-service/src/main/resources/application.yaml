@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
@@ -20,8 +20,8 @@ security:
     ttl-minutes: 60
 
 app:
-  issuer: "http://localhost:8080"
-  audience: "autenticacion"
+  issuer: ${JWT_ISSUER:"http://localhost:8080"}
+  audience: "autenticacion" # no lo estoy usando :D
 
 
 
