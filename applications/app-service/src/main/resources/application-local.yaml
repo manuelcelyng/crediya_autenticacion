@@ -11,18 +11,18 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     change-log: "classpath:db/changelog/db.changelog-master.yaml"
     # Liquibase usará su propio DataSource JDBC si se provee esta URL (el proyecto usa R2DBC para runtime)
-    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?useUnicode=true&allowPublicKeyRetrieval=true&useSSL=false
-    user: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:crediya_autenticacion}?useUnicode=true&allowPublicKeyRetrieval=true&useSSL=false
+    user: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:mysql}
 
 
 adapters:
   r2dbc:
     host: ${MYSQL_HOST:localhost}
     port: ${MYSQL_PORT:3306}
-    database: ${MYSQL_DATABASE}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
+    database: ${MYSQL_DATABASE:crediya_autenticacion}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:mysql}
 
 
 app:
