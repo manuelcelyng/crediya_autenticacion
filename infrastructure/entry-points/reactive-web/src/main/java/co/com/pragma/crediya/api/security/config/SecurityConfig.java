@@ -48,7 +48,7 @@ public class SecurityConfig {
                     ex.pathMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                             .pathMatchers(HttpMethod.GET, "/api/v1/ping").permitAll()
                         // reglas de negocio:
-                            .pathMatchers(HttpMethod.POST, "/api/v1/usuarios/solicitud").hasAnyAuthority("ADMIN", "ASESOR")
+                            .pathMatchers(HttpMethod.POST, "/api/v1/usuarios/solicitud").hasAnyAuthority("ADMIN", "ASESOR","CLIENTE")
                             .pathMatchers(HttpMethod.POST, "/api/v1/usuarios").hasAnyAuthority("ADMIN", "ASESOR")
                             .pathMatchers(HttpMethod.POST, "/api/v1/usuarios/validar").hasAuthority("CLIENTE")
                             .anyExchange().authenticated();
